@@ -1,0 +1,263 @@
+---
+title: "ANLY-512 Case Study Code Walkthrough"
+author: 
+  - name: Group 8
+date: "2023-03-27"
+format: 
+  revealjs:
+    output-file: Demo_Walkthrough.html
+    transition: slide
+    transition-speed: fast
+    background-transition: fade
+    highlight-style: a11y
+    embed-resources: true
+    self-contained: true
+    slide-number: true
+    smaller: true
+    code-fold: true
+  pdf: default
+code-link: true
+execute:
+  echo: true
+  freeze: auto
+---
+
+```{r,include=FALSE, message=FALSE, warning=FALSE}
+library(flipbookr)
+library(tidyverse)
+library(ggplot2)
+library(forecast)
+library(astsa) 
+library(xts)
+library(tseries)
+library(fpp2)
+library(fma)
+library(lubridate)
+library(tidyverse)
+library(TSstudio)
+library(quantmod)
+library(tidyquant)
+library(plotly)
+library(ggplot2)
+library(padr)
+library(gridExtra)
+library(neuralnet)
+set.seed(20918)
+```
+
+```{r loadntidy, message=FALSE, warning=FALSE, include=FALSE}
+df <- read.csv("Oil.csv")
+#df$Date <- as.Date(with(gtd,paste(iyear,imonth,iday,sep="-")),"%Y-%m-%d")
+#df$Date <- as.POSIXct(df$Date, format = "%d/%m/%Y")
+#df$Date <- as.Date(df$Date, format = "%M-%D-%Y")
+df$Date <- mdy(df$Date)
+df <- arrange(df, desc(row_number()))
+date_range <- seq(from = df$Date[1], to = df$Date[1513], by = "day")
+all_dates <- data.frame(Date = date_range)
+df <- merge(all_dates, df, by = "Date", all.x = TRUE)
+df <- arrange(df, Date)
+df$Price <- na.interp(df$Price)
+df$Price <- as.numeric(df$Price)
+df <- subset(df, select=-c(Vol., Change..))
+
+#df$SMA_50 <- as.numeric(SMA(df$Price),n=100)
+#df$SMA_200 <- as.numeric(SMA(df$Price),n=200)
+
+# lagged var
+
+df <- df %>%
+  mutate(lag2 = lag(Price, 2),
+         lag3 = lag(Price, 3),
+         lag4 = lag(Price, 4),
+         lag5 = lag(Price, 5))
+
+df[, (ncol(df)-3):ncol(df)] <- apply(df[, (ncol(df)-3):ncol(df)], 2, na.interp) # Fill NAs in lagged vars
+```
+
+## Crude Oil Futures: Candlestick Chart (After Interpolation)
+```{r, message=FALSE, warning=FALSE,}
+plot_ly(data=df, x = ~Date) %>% 
+  add_trace(type="candlestick",
+            open = ~Open, close = ~Price,
+            high = ~High, low = ~Low, name="Crude Oil Futures") %>% 
+  layout(title="Crude Oil Futures: Candlestick Chart",
+         yaxis=list(title=("Price ($)"))) %>%
+  layout(hovermode = "x") %>%
+  layout(paper_bgcolor = "black",
+         plot_bgcolor = "black",
+         font = list(color = "white"),
+         yaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"),
+         xaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"))
+```
+
+## Neural Network Model I (Predicting Price - Regression)
+
+
+```{r, message=FALSE, warning=FALSE}
+library(cowplot)
+library(ggplot2)
+
+ggdraw() + draw_image("./newmodel.png", 
+                             width = 1.3, halign = 0.5)
+```
+                             
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+df <- subset(df, select=-c(Open, High, Low))
+# Normalize the data
+# Define a function to scale the prices between -3 and 3, including missing values
+scale_between_3_3 <- function(x) {
+    # Identify the non-missing values
+    non_missing <- !is.na(x)
+    # Scale the non-missing values between -1 and 1
+    x_scaled <- scale(x[non_missing], center = TRUE, scale = max(abs(x[non_missing])))[, 1]
+    # Assign the scaled values back to the original vector
+    #x[non_missing] <- x_scaled * 3
+    # Return the scaled vector
+    return(x_scaled)
+}
+
+# Apply the scaling function to the price column
+closing_price <- scale_between_3_3(df$Price)
+lag_2_scaled <- scale_between_3_3(df$lag2)
+lag_3_scaled <- scale_between_3_3(df$lag3)
+lag_4_scaled <- scale_between_3_3(df$lag4)
+lag_5_scaled <- scale_between_3_3(df$lag5)
+
+scaled_df <- data.frame(df$Date, closing_price, lag_2_scaled, lag_3_scaled, lag_4_scaled, lag_5_scaled)
+
+# Split the data into training and testing set 70-30
+train <- scaled_df[1:1469,]
+test <- scaled_df[1470:2099,]
+
+#train <- subset(train, select=-c(Date))
+#test <- subset(test, select=-c(Date))
+
+# Build Neural Network
+softplus <- function(x) log(1 + exp(x))
+nn <- neuralnet(closing_price ~ lag_2_scaled + lag_3_scaled + lag_4_scaled + lag_5_scaled, 
+                data = train, hidden = c(20, 20), 
+                algorithm = 'backprop',
+                act.fct = softplus,
+                learningrate = 0.00001,
+                threshold = 0.1,
+                err.fct = "sse",
+                linear.output = TRUE)
+  
+# Predict on test data
+pr.nn <- compute(nn, test[,2:5])
+  
+# Compute mean squared error
+pr.nn_ <- pr.nn$net.result * (max(test$closing_price) - min(test$closing_price)) 
+                                              + min(test$closing_price)
+test.r <- (test$closing_price) * (max(test$closing_price) - min(test$closing_price)) + 
+                                              min(test$closing_price)
+RMSE.nn <- (sum((test.r - pr.nn_)^2) / nrow(test))**0.5
+  
+# Plot the neural network
+#plot(nn)
+#cat("RMSE on test set: ", RMSE.nn)
+```
+
+## Neural Network Model: Result on Test Data
+```{r, message=FALSE, warning=FALSE}
+preds_reverted <- ((pr.nn$net.result + 1) / 2) * (max(abs(df$Price)) - min(abs(df$Price))) + min(abs(df$Price))
+closing_price_orig <- df[1470:2099, 2]
+plot_df_test <- data.frame(test$df.Date, preds_reverted, closing_price_orig)
+
+plot_ly(data=plot_df_test, x = ~test.df.Date) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~preds_reverted, 
+            name="Predicted Closing Price", line = list(color = 'blue')) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~closing_price_orig, 
+            name="Original Closing Price",line = list(color = 'orange')) %>% 
+  layout(title="Crude Oil Futures: Predicted vs Original (Test Set)",
+         yaxis=list(title=("Price ($)")),
+         xaxis=list(title=("Date"))) %>%
+  layout(hovermode = "x") %>%
+  layout(paper_bgcolor = "black",
+         plot_bgcolor = "black",
+         font = list(color = "white"),
+         yaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"),
+         xaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"))
+#cat("RMSE on test set: ", RMSE.nn)
+```
+
+## Neural Network Model: Result on Train Data
+```{r, message=FALSE, warning=FALSE, include=FALSE}
+
+# Predict on test data
+pr.nn <- compute(nn, train[,2:5])
+  
+# Compute mean squared error
+pr.nn_ <- pr.nn$net.result * (max(train$closing_price) - min(train$closing_price)) 
+                                              + min(train$closing_price)
+train.r <- (train$closing_price) * (max(train$closing_price) - min(train$closing_price)) + 
+                                              min(train$closing_price)
+RMSE.nn <- sum((train.r - pr.nn_)^2) / nrow(train)
+  
+# Plot the neural network
+#plot(nn)
+cat("RMSE on TRAIN set: ", RMSE.nn)
+
+preds_reverted_train <- ((pr.nn$net.result + 1) / 2) * (max(abs(df$Price)) - min(abs(df$Price))) + min(abs(df$Price))
+closing_price_orig_train <- df[1:1469, 2]
+plot_df_train <- data.frame(train$df.Date, preds_reverted_train, closing_price_orig_train)
+```
+
+
+```{r, message=FALSE, warning=FALSE}
+plot_ly(data=plot_df_train, x = ~train.df.Date) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~preds_reverted_train, 
+            name="Predicted Closing Price", line = list(color = 'blue')) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~closing_price_orig_train, 
+            name="Original Closing Price",line = list(color = 'orange')) %>% 
+  layout(title="Crude Oil Futures: Predicted vs Original (Train Set)",
+         yaxis=list(title=("Price ($)")),
+         xaxis=list(title=("Date"))) %>%
+  layout(hovermode = "x") %>%
+  layout(paper_bgcolor = "black",
+         plot_bgcolor = "black",
+         font = list(color = "white"),
+         yaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"),
+         xaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"))
+#cat("RMSE on test set: ", RMSE.nn)
+```
+
+
+## Neural Network Model: Combined Result
+```{r, message=FALSE, warning=FALSE}
+#plot_df_all <- data.frame(train$df.Date, preds_reverted, closing_price_orig)
+colnames(plot_df_train) <- colnames(plot_df_test)
+
+plot_df_all <- rbind(plot_df_train, plot_df_test)
+
+plot_ly(data=plot_df_all, x = ~test.df.Date) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~preds_reverted, 
+            name="Predicted Closing Price", line = list(color = 'blue')) %>% 
+  add_trace(type = 'scatter', mode = 'lines', y=~closing_price_orig, 
+            name="Original Closing Price",line = list(color = 'orange')) %>% 
+  layout(title="Crude Oil Futures: Predicted vs Original (Full Dataset)",
+         yaxis=list(title=("Price ($)")),
+         xaxis=list(title=("Date"))) %>%
+  layout(hovermode = "x") %>%
+  layout(paper_bgcolor = "black",
+         plot_bgcolor = "black",
+         font = list(color = "white"),
+         yaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"),
+         xaxis = list(linecolor = "#6b6b6b",
+                      zerolinecolor = "#6b6b6b",
+                      gridcolor= "#444444"))
+```
