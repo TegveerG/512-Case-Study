@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.1.251">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>model</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<script src="model_files/libs/clipboard/clipboard.min.js"></script>
+<script src="model_files/libs/quarto-html/quarto.js"></script>
+<script src="model_files/libs/quarto-html/popper.min.js"></script>
+<script src="model_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="model_files/libs/quarto-html/anchor.min.js"></script>
+<link href="model_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="model_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="model_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="model_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="model_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+
+
+<section id="case-study-crude-oil-price-prediction-using-artificial-neural-network-walkthrough" class="level1">
+<h1>512 Case Study (Crude Oil Price Prediction using Artificial Neural Network) Walkthrough</h1>
+<section id="import-libraries" class="level2">
+<h2 class="anchored" data-anchor-id="import-libraries">Import Libraries</h2>
+<div class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tensorflow <span class="im">as</span> ts</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> keras</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.models <span class="im">import</span> Sequential</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.layers <span class="im">import</span> Dense</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.layers <span class="im">import</span> LSTM</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.layers <span class="im">import</span> Dropout</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.preprocessing <span class="im">import</span> MinMaxScaler</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_squared_error</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_error</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> r2_score</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> explained_variance_score</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> max_error</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> mean_absolute_percentage_error</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.metrics <span class="im">import</span> median_absolute_error</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.graph_objects <span class="im">as</span> go</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.express <span class="im">as</span> px</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> plotly.io <span class="im">as</span> pio</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>pio.renderers.default <span class="op">=</span> <span class="st">"browser"</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>sns.set_theme()</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> graphviz</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Init Plugin
+Init Graph Optimizer
+Init Kernel</code></pre>
+</div>
+</div>
+</section>
+<section id="data-preprocessing-and-model-building" class="level2">
+<h2 class="anchored" data-anchor-id="data-preprocessing-and-model-building">Data Preprocessing and Model Building</h2>
+<div class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras <span class="im">import</span> models</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras <span class="im">import</span> layers</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">'unscaled.csv'</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>x_train <span class="op">=</span> df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, <span class="dv">2</span>]</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>y_train <span class="op">=</span> df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>:, <span class="dv">1</span>]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>x_test <span class="op">=</span> df.iloc[<span class="dv">1469</span>:, <span class="dv">2</span>]</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>y_test <span class="op">=</span> df.iloc[<span class="dv">1469</span>:, <span class="dv">1</span>]</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>mean <span class="op">=</span> x_train.mean(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>x_train <span class="op">-=</span> mean</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>std <span class="op">=</span> x_train.std(axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>x_train <span class="op">/=</span> std</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>x_test <span class="op">-=</span> mean</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>x_test <span class="op">/=</span> std</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>hidden_units1 <span class="op">=</span> <span class="dv">512</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>hidden_units2 <span class="op">=</span> <span class="dv">1024</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>hidden_units3 <span class="op">=</span> <span class="dv">512</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>learning_rate <span class="op">=</span> <span class="fl">0.0001</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>optimizer<span class="op">=</span><span class="st">'adam'</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>loss<span class="op">=</span><span class="st">'mse'</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>metrics<span class="op">=</span>[<span class="st">'mae'</span>,keras.metrics.MeanAbsolutePercentageError()]</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating model using the Sequential in tensorflow</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_model_using_sequential():</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>  model <span class="op">=</span> Sequential([</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    Dense(hidden_units1, kernel_initializer<span class="op">=</span><span class="st">'normal'</span>, activation<span class="op">=</span><span class="st">'relu'</span>),</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Dropout(0.2),</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    Dense(hidden_units2, kernel_initializer<span class="op">=</span><span class="st">'normal'</span>, activation<span class="op">=</span><span class="st">'relu'</span>),</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Dropout(0.2),</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>    Dense(hidden_units3, kernel_initializer<span class="op">=</span><span class="st">'normal'</span>, activation<span class="op">=</span><span class="st">'relu'</span>),</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    Dense(<span class="dv">1</span>, kernel_initializer<span class="op">=</span><span class="st">'normal'</span>, activation<span class="op">=</span><span class="st">'linear'</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>  ])</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> model</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># build the model</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> build_model_using_sequential()</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a><span class="co"># loss function</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">compile</span>(</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    loss<span class="op">=</span>loss, </span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>optimizer, </span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>    metrics<span class="op">=</span>metrics</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="co"># train the model</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a>history <span class="op">=</span> model.fit(</span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a>    x_train.values, </span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a>    y_train.values, </span>
+<span id="cb3-52"><a href="#cb3-52" aria-hidden="true" tabindex="-1"></a>    epochs<span class="op">=</span><span class="dv">100</span>, </span>
+<span id="cb3-53"><a href="#cb3-53" aria-hidden="true" tabindex="-1"></a>    batch_size<span class="op">=</span><span class="dv">32</span>,</span>
+<span id="cb3-54"><a href="#cb3-54" aria-hidden="true" tabindex="-1"></a>    validation_split<span class="op">=</span><span class="fl">0.2</span></span>
+<span id="cb3-55"><a href="#cb3-55" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-56"><a href="#cb3-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-57"><a href="#cb3-57" aria-hidden="true" tabindex="-1"></a><span class="co"># SAVE PREDICTIONS</span></span>
+<span id="cb3-58"><a href="#cb3-58" aria-hidden="true" tabindex="-1"></a>x_test[<span class="st">'prediction'</span>] <span class="op">=</span> model.predict(x_test)</span>
+<span id="cb3-59"><a href="#cb3-59" aria-hidden="true" tabindex="-1"></a>x_train[<span class="st">'prediction'</span>] <span class="op">=</span> model.predict(x_train)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Metal device set to: Apple M1 Pro
+
+systemMemory: 16.00 GB
+maxCacheSize: 5.33 GB
+
+Epoch 1/100</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-03-27 02:39:55.173632: I tensorflow/core/common_runtime/pluggable_device/pluggable_device_factory.cc:305] Could not identify NUMA node of platform GPU ID 0, defaulting to 0. Your kernel may not have been built with NUMA support.
+2023-03-27 02:39:55.173786: I tensorflow/core/common_runtime/pluggable_device/pluggable_device_factory.cc:271] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 0 MB memory) -&gt; physical PluggableDevice (device: 0, name: METAL, pci bus id: &lt;undefined&gt;)
+2023-03-27 02:39:55.342839: I tensorflow/compiler/mlir/mlir_graph_optimization_pass.cc:176] None of the MLIR Optimization Passes are enabled (registered 2)
+2023-03-27 02:39:55.345324: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> 1/37 [..............................] - ETA: 5:42 - loss: 6048.0615 - mae: 73.4279 - mean_absolute_percentage_error: 99.9813</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-03-27 02:40:04.681183: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:112] Plugin optimizer for device_type GPU is enabled.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>37/37 [==============================] - 10s 20ms/step - loss: 3239.1337 - mae: 50.2395 - mean_absolute_percentage_error: 80.7849 - val_loss: 440.3162 - val_mae: 20.0457 - val_mean_absolute_percentage_error: 38.6653
+Epoch 2/100
+ 1/37 [..............................] - ETA: 0s - loss: 342.4920 - mae: 16.8793 - mean_absolute_percentage_error: 34.0243</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-03-27 02:40:05.435765: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:112] Plugin optimizer for device_type GPU is enabled.</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>37/37 [==============================] - 0s 11ms/step - loss: 183.3865 - mae: 10.9440 - mean_absolute_percentage_error: 21.4099 - val_loss: 22.3975 - val_mae: 4.0914 - val_mean_absolute_percentage_error: 7.7199
+Epoch 3/100
+37/37 [==============================] - 0s 10ms/step - loss: 32.4641 - mae: 4.4402 - mean_absolute_percentage_error: 9.0526 - val_loss: 10.6996 - val_mae: 2.9628 - val_mean_absolute_percentage_error: 5.6623
+Epoch 4/100
+37/37 [==============================] - 0s 10ms/step - loss: 9.1426 - mae: 2.3489 - mean_absolute_percentage_error: 4.7820 - val_loss: 2.9163 - val_mae: 1.5088 - val_mean_absolute_percentage_error: 2.9183
+Epoch 5/100
+37/37 [==============================] - 0s 10ms/step - loss: 3.2260 - mae: 1.3838 - mean_absolute_percentage_error: 2.7297 - val_loss: 1.5418 - val_mae: 1.0522 - val_mean_absolute_percentage_error: 2.0813
+Epoch 6/100
+37/37 [==============================] - 0s 11ms/step - loss: 2.2968 - mae: 1.1220 - mean_absolute_percentage_error: 2.1898 - val_loss: 0.7757 - val_mae: 0.6948 - val_mean_absolute_percentage_error: 1.3851
+Epoch 7/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0168 - mae: 1.0726 - mean_absolute_percentage_error: 2.0311 - val_loss: 0.7791 - val_mae: 0.6916 - val_mean_absolute_percentage_error: 1.3780
+Epoch 8/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8647 - mae: 1.0234 - mean_absolute_percentage_error: 1.9316 - val_loss: 1.2469 - val_mae: 0.9157 - val_mean_absolute_percentage_error: 1.8218
+Epoch 9/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9763 - mae: 1.0637 - mean_absolute_percentage_error: 2.0156 - val_loss: 1.0079 - val_mae: 0.8094 - val_mean_absolute_percentage_error: 1.6104
+Epoch 10/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9776 - mae: 1.0445 - mean_absolute_percentage_error: 1.9347 - val_loss: 0.7553 - val_mae: 0.6649 - val_mean_absolute_percentage_error: 1.3284
+Epoch 11/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9463 - mae: 1.0541 - mean_absolute_percentage_error: 2.0017 - val_loss: 0.7569 - val_mae: 0.6662 - val_mean_absolute_percentage_error: 1.3302
+Epoch 12/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9714 - mae: 1.0764 - mean_absolute_percentage_error: 2.0101 - val_loss: 0.8035 - val_mae: 0.6992 - val_mean_absolute_percentage_error: 1.3867
+Epoch 13/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0208 - mae: 1.0656 - mean_absolute_percentage_error: 1.9756 - val_loss: 0.8628 - val_mae: 0.7354 - val_mean_absolute_percentage_error: 1.4625
+Epoch 14/100
+37/37 [==============================] - 0s 11ms/step - loss: 2.1389 - mae: 1.0943 - mean_absolute_percentage_error: 2.0846 - val_loss: 0.8760 - val_mae: 0.7394 - val_mean_absolute_percentage_error: 1.4610
+Epoch 15/100
+37/37 [==============================] - 0s 12ms/step - loss: 1.8381 - mae: 1.0070 - mean_absolute_percentage_error: 1.8766 - val_loss: 0.7538 - val_mae: 0.6605 - val_mean_absolute_percentage_error: 1.3183
+Epoch 16/100
+37/37 [==============================] - 0s 12ms/step - loss: 1.8083 - mae: 1.0157 - mean_absolute_percentage_error: 1.9340 - val_loss: 0.8849 - val_mae: 0.7289 - val_mean_absolute_percentage_error: 1.4658
+Epoch 17/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8073 - mae: 1.0231 - mean_absolute_percentage_error: 1.9412 - val_loss: 0.8305 - val_mae: 0.7173 - val_mean_absolute_percentage_error: 1.4246
+Epoch 18/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8169 - mae: 1.0252 - mean_absolute_percentage_error: 1.9194 - val_loss: 1.1949 - val_mae: 0.9014 - val_mean_absolute_percentage_error: 1.7694
+Epoch 19/100
+37/37 [==============================] - 0s 11ms/step - loss: 1.7652 - mae: 0.9948 - mean_absolute_percentage_error: 1.8613 - val_loss: 0.9685 - val_mae: 0.7914 - val_mean_absolute_percentage_error: 1.5605
+Epoch 20/100
+37/37 [==============================] - 0s 11ms/step - loss: 1.9266 - mae: 1.0845 - mean_absolute_percentage_error: 2.0246 - val_loss: 0.7984 - val_mae: 0.6774 - val_mean_absolute_percentage_error: 1.3572
+Epoch 21/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8296 - mae: 1.0251 - mean_absolute_percentage_error: 1.9244 - val_loss: 0.7733 - val_mae: 0.6739 - val_mean_absolute_percentage_error: 1.3399
+Epoch 22/100
+37/37 [==============================] - 0s 11ms/step - loss: 1.8926 - mae: 1.0499 - mean_absolute_percentage_error: 1.9991 - val_loss: 1.3488 - val_mae: 0.9706 - val_mean_absolute_percentage_error: 1.8999
+Epoch 23/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.5635 - mae: 1.2406 - mean_absolute_percentage_error: 2.2819 - val_loss: 0.7882 - val_mae: 0.6841 - val_mean_absolute_percentage_error: 1.3565
+Epoch 24/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9443 - mae: 1.0457 - mean_absolute_percentage_error: 1.9810 - val_loss: 1.1596 - val_mae: 0.8855 - val_mean_absolute_percentage_error: 1.7366
+Epoch 25/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9131 - mae: 1.0348 - mean_absolute_percentage_error: 1.8989 - val_loss: 0.7591 - val_mae: 0.6690 - val_mean_absolute_percentage_error: 1.3312
+Epoch 26/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8736 - mae: 1.0416 - mean_absolute_percentage_error: 1.9677 - val_loss: 1.0430 - val_mae: 0.8290 - val_mean_absolute_percentage_error: 1.6282
+Epoch 27/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1467 - mae: 1.0922 - mean_absolute_percentage_error: 1.9690 - val_loss: 0.8373 - val_mae: 0.7046 - val_mean_absolute_percentage_error: 1.4141
+Epoch 28/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8945 - mae: 1.0619 - mean_absolute_percentage_error: 1.9939 - val_loss: 0.8398 - val_mae: 0.7183 - val_mean_absolute_percentage_error: 1.4198
+Epoch 29/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8498 - mae: 1.0538 - mean_absolute_percentage_error: 2.0019 - val_loss: 0.9581 - val_mae: 0.7592 - val_mean_absolute_percentage_error: 1.5335
+Epoch 30/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0164 - mae: 1.0744 - mean_absolute_percentage_error: 1.9759 - val_loss: 1.2964 - val_mae: 0.9474 - val_mean_absolute_percentage_error: 1.8579
+Epoch 31/100
+37/37 [==============================] - 0s 11ms/step - loss: 1.9386 - mae: 1.0695 - mean_absolute_percentage_error: 2.0172 - val_loss: 1.2669 - val_mae: 0.9336 - val_mean_absolute_percentage_error: 1.8350
+Epoch 32/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1804 - mae: 1.1477 - mean_absolute_percentage_error: 2.1657 - val_loss: 0.8596 - val_mae: 0.7271 - val_mean_absolute_percentage_error: 1.4345
+Epoch 33/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0944 - mae: 1.1039 - mean_absolute_percentage_error: 2.0281 - val_loss: 0.8307 - val_mae: 0.7076 - val_mean_absolute_percentage_error: 1.3969
+Epoch 34/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0543 - mae: 1.1032 - mean_absolute_percentage_error: 2.0864 - val_loss: 0.7659 - val_mae: 0.6719 - val_mean_absolute_percentage_error: 1.3357
+Epoch 35/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0123 - mae: 1.0409 - mean_absolute_percentage_error: 1.9498 - val_loss: 1.1575 - val_mae: 0.8839 - val_mean_absolute_percentage_error: 1.7277
+Epoch 36/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0896 - mae: 1.1279 - mean_absolute_percentage_error: 2.1114 - val_loss: 0.8074 - val_mae: 0.6978 - val_mean_absolute_percentage_error: 1.3813
+Epoch 37/100
+37/37 [==============================] - 0s 9ms/step - loss: 1.7019 - mae: 0.9722 - mean_absolute_percentage_error: 1.8220 - val_loss: 1.0623 - val_mae: 0.8367 - val_mean_absolute_percentage_error: 1.6365
+Epoch 38/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0978 - mae: 1.1252 - mean_absolute_percentage_error: 2.0629 - val_loss: 0.7722 - val_mae: 0.6657 - val_mean_absolute_percentage_error: 1.3305
+Epoch 39/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9504 - mae: 1.0591 - mean_absolute_percentage_error: 1.9628 - val_loss: 0.9154 - val_mae: 0.7588 - val_mean_absolute_percentage_error: 1.4943
+Epoch 40/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8448 - mae: 1.0351 - mean_absolute_percentage_error: 1.9757 - val_loss: 0.7503 - val_mae: 0.6631 - val_mean_absolute_percentage_error: 1.3208
+Epoch 41/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2415 - mae: 1.1257 - mean_absolute_percentage_error: 2.0226 - val_loss: 1.9842 - val_mae: 1.2264 - val_mean_absolute_percentage_error: 2.3970
+Epoch 42/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1182 - mae: 1.1233 - mean_absolute_percentage_error: 2.1173 - val_loss: 0.8440 - val_mae: 0.7026 - val_mean_absolute_percentage_error: 1.4138
+Epoch 43/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0542 - mae: 1.1124 - mean_absolute_percentage_error: 2.0874 - val_loss: 0.7869 - val_mae: 0.6878 - val_mean_absolute_percentage_error: 1.3656
+Epoch 44/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9226 - mae: 1.0658 - mean_absolute_percentage_error: 1.9694 - val_loss: 0.7912 - val_mae: 0.6846 - val_mean_absolute_percentage_error: 1.3579
+Epoch 45/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8414 - mae: 1.0259 - mean_absolute_percentage_error: 1.9164 - val_loss: 0.7771 - val_mae: 0.6672 - val_mean_absolute_percentage_error: 1.3346
+Epoch 46/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.7393 - mae: 1.0098 - mean_absolute_percentage_error: 1.8615 - val_loss: 0.7936 - val_mae: 0.6749 - val_mean_absolute_percentage_error: 1.3520
+Epoch 47/100
+37/37 [==============================] - 0s 11ms/step - loss: 2.0982 - mae: 1.1054 - mean_absolute_percentage_error: 2.0871 - val_loss: 1.3456 - val_mae: 0.9671 - val_mean_absolute_percentage_error: 1.8828
+Epoch 48/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9754 - mae: 1.0726 - mean_absolute_percentage_error: 1.9551 - val_loss: 0.9852 - val_mae: 0.7990 - val_mean_absolute_percentage_error: 1.5719
+Epoch 49/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0205 - mae: 1.0625 - mean_absolute_percentage_error: 1.9558 - val_loss: 0.9671 - val_mae: 0.7923 - val_mean_absolute_percentage_error: 1.5663
+Epoch 50/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9251 - mae: 1.0402 - mean_absolute_percentage_error: 1.9515 - val_loss: 0.8127 - val_mae: 0.7005 - val_mean_absolute_percentage_error: 1.3856
+Epoch 51/100
+37/37 [==============================] - 0s 9ms/step - loss: 1.9848 - mae: 1.0644 - mean_absolute_percentage_error: 1.9941 - val_loss: 0.9597 - val_mae: 0.7869 - val_mean_absolute_percentage_error: 1.5510
+Epoch 52/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9654 - mae: 1.0660 - mean_absolute_percentage_error: 1.9965 - val_loss: 0.8427 - val_mae: 0.7170 - val_mean_absolute_percentage_error: 1.4152
+Epoch 53/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8844 - mae: 1.0452 - mean_absolute_percentage_error: 1.9802 - val_loss: 0.7815 - val_mae: 0.6783 - val_mean_absolute_percentage_error: 1.3476
+Epoch 54/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0634 - mae: 1.0721 - mean_absolute_percentage_error: 1.9911 - val_loss: 0.7582 - val_mae: 0.6603 - val_mean_absolute_percentage_error: 1.3195
+Epoch 55/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8662 - mae: 1.0577 - mean_absolute_percentage_error: 1.9697 - val_loss: 0.8279 - val_mae: 0.7015 - val_mean_absolute_percentage_error: 1.4059
+Epoch 56/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.3511 - mae: 1.2079 - mean_absolute_percentage_error: 2.2580 - val_loss: 1.1715 - val_mae: 0.8575 - val_mean_absolute_percentage_error: 1.7380
+Epoch 57/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0851 - mae: 1.1152 - mean_absolute_percentage_error: 2.1147 - val_loss: 0.9141 - val_mae: 0.7627 - val_mean_absolute_percentage_error: 1.5063
+Epoch 58/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0268 - mae: 1.0705 - mean_absolute_percentage_error: 1.9979 - val_loss: 0.7809 - val_mae: 0.6694 - val_mean_absolute_percentage_error: 1.3397
+Epoch 59/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0373 - mae: 1.0985 - mean_absolute_percentage_error: 1.9964 - val_loss: 1.0412 - val_mae: 0.8279 - val_mean_absolute_percentage_error: 1.6319
+Epoch 60/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9914 - mae: 1.0736 - mean_absolute_percentage_error: 2.0084 - val_loss: 0.7922 - val_mae: 0.6772 - val_mean_absolute_percentage_error: 1.3580
+Epoch 61/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.4877 - mae: 1.2219 - mean_absolute_percentage_error: 2.2055 - val_loss: 1.6226 - val_mae: 1.0492 - val_mean_absolute_percentage_error: 2.1135
+Epoch 62/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.8037 - mae: 1.3432 - mean_absolute_percentage_error: 2.4526 - val_loss: 0.8004 - val_mae: 0.6787 - val_mean_absolute_percentage_error: 1.3618
+Epoch 63/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.3636 - mae: 1.1779 - mean_absolute_percentage_error: 2.2006 - val_loss: 0.9040 - val_mae: 0.7351 - val_mean_absolute_percentage_error: 1.4813
+Epoch 64/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0184 - mae: 1.0689 - mean_absolute_percentage_error: 1.9685 - val_loss: 0.8075 - val_mae: 0.6826 - val_mean_absolute_percentage_error: 1.3701
+Epoch 65/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2791 - mae: 1.1593 - mean_absolute_percentage_error: 2.1200 - val_loss: 0.8496 - val_mae: 0.7250 - val_mean_absolute_percentage_error: 1.4337
+Epoch 66/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1353 - mae: 1.1134 - mean_absolute_percentage_error: 2.0444 - val_loss: 1.5764 - val_mae: 1.0655 - val_mean_absolute_percentage_error: 2.0803
+Epoch 67/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.0043 - mae: 1.0956 - mean_absolute_percentage_error: 2.0672 - val_loss: 0.7457 - val_mae: 0.6591 - val_mean_absolute_percentage_error: 1.3147
+Epoch 68/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9544 - mae: 1.0839 - mean_absolute_percentage_error: 1.9660 - val_loss: 0.8245 - val_mae: 0.6930 - val_mean_absolute_percentage_error: 1.3929
+Epoch 69/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1001 - mae: 1.0946 - mean_absolute_percentage_error: 2.0725 - val_loss: 0.7640 - val_mae: 0.6736 - val_mean_absolute_percentage_error: 1.3400
+Epoch 70/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.8734 - mae: 1.0543 - mean_absolute_percentage_error: 1.9402 - val_loss: 0.8169 - val_mae: 0.6885 - val_mean_absolute_percentage_error: 1.3759
+Epoch 71/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.6753 - mae: 1.2723 - mean_absolute_percentage_error: 2.3105 - val_loss: 2.5189 - val_mae: 1.4073 - val_mean_absolute_percentage_error: 2.7664
+Epoch 72/100
+37/37 [==============================] - 0s 10ms/step - loss: 3.2399 - mae: 1.4104 - mean_absolute_percentage_error: 2.5479 - val_loss: 0.9415 - val_mae: 0.7458 - val_mean_absolute_percentage_error: 1.5053
+Epoch 73/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.6275 - mae: 1.2726 - mean_absolute_percentage_error: 2.3410 - val_loss: 1.9900 - val_mae: 1.2295 - val_mean_absolute_percentage_error: 2.4103
+Epoch 74/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.6502 - mae: 1.2749 - mean_absolute_percentage_error: 2.2675 - val_loss: 0.8283 - val_mae: 0.7065 - val_mean_absolute_percentage_error: 1.3944
+Epoch 75/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9617 - mae: 1.0722 - mean_absolute_percentage_error: 1.9937 - val_loss: 0.8913 - val_mae: 0.7303 - val_mean_absolute_percentage_error: 1.4714
+Epoch 76/100
+37/37 [==============================] - 0s 9ms/step - loss: 2.0831 - mae: 1.0997 - mean_absolute_percentage_error: 2.0560 - val_loss: 0.8790 - val_mae: 0.7358 - val_mean_absolute_percentage_error: 1.4482
+Epoch 77/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2957 - mae: 1.1666 - mean_absolute_percentage_error: 2.1199 - val_loss: 1.0545 - val_mae: 0.8335 - val_mean_absolute_percentage_error: 1.6310
+Epoch 78/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1300 - mae: 1.1198 - mean_absolute_percentage_error: 2.0960 - val_loss: 1.6706 - val_mae: 1.0653 - val_mean_absolute_percentage_error: 2.1580
+Epoch 79/100
+37/37 [==============================] - 0s 9ms/step - loss: 3.1301 - mae: 1.3876 - mean_absolute_percentage_error: 2.4428 - val_loss: 0.9942 - val_mae: 0.8051 - val_mean_absolute_percentage_error: 1.5955
+Epoch 80/100
+37/37 [==============================] - 0s 9ms/step - loss: 2.0389 - mae: 1.0954 - mean_absolute_percentage_error: 1.9691 - val_loss: 1.0520 - val_mae: 0.8261 - val_mean_absolute_percentage_error: 1.6107
+Epoch 81/100
+37/37 [==============================] - 0s 9ms/step - loss: 2.1663 - mae: 1.1326 - mean_absolute_percentage_error: 2.0726 - val_loss: 0.7476 - val_mae: 0.6589 - val_mean_absolute_percentage_error: 1.3160
+Epoch 82/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.9686 - mae: 1.3337 - mean_absolute_percentage_error: 2.5054 - val_loss: 1.3382 - val_mae: 0.9652 - val_mean_absolute_percentage_error: 1.8949
+Epoch 83/100
+37/37 [==============================] - 0s 11ms/step - loss: 1.9274 - mae: 1.0597 - mean_absolute_percentage_error: 2.0090 - val_loss: 0.7463 - val_mae: 0.6584 - val_mean_absolute_percentage_error: 1.3128
+Epoch 84/100
+37/37 [==============================] - 0s 10ms/step - loss: 1.9472 - mae: 1.0536 - mean_absolute_percentage_error: 1.9140 - val_loss: 0.9280 - val_mae: 0.7579 - val_mean_absolute_percentage_error: 1.5130
+Epoch 85/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.7248 - mae: 1.2824 - mean_absolute_percentage_error: 2.2934 - val_loss: 0.7994 - val_mae: 0.6802 - val_mean_absolute_percentage_error: 1.3571
+Epoch 86/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.5165 - mae: 1.2142 - mean_absolute_percentage_error: 2.2190 - val_loss: 0.7916 - val_mae: 0.6740 - val_mean_absolute_percentage_error: 1.3511
+Epoch 87/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1990 - mae: 1.1417 - mean_absolute_percentage_error: 2.1325 - val_loss: 0.8529 - val_mae: 0.7210 - val_mean_absolute_percentage_error: 1.4202
+Epoch 88/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2037 - mae: 1.1469 - mean_absolute_percentage_error: 2.0962 - val_loss: 0.8927 - val_mae: 0.7231 - val_mean_absolute_percentage_error: 1.4525
+Epoch 89/100
+37/37 [==============================] - 0s 9ms/step - loss: 2.0260 - mae: 1.0963 - mean_absolute_percentage_error: 1.9953 - val_loss: 1.4174 - val_mae: 0.9662 - val_mean_absolute_percentage_error: 1.9547
+Epoch 90/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2542 - mae: 1.1606 - mean_absolute_percentage_error: 2.1773 - val_loss: 2.1374 - val_mae: 1.2401 - val_mean_absolute_percentage_error: 2.4837
+Epoch 91/100
+37/37 [==============================] - 0s 9ms/step - loss: 2.6183 - mae: 1.2590 - mean_absolute_percentage_error: 2.2903 - val_loss: 0.8420 - val_mae: 0.7052 - val_mean_absolute_percentage_error: 1.4176
+Epoch 92/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.3704 - mae: 1.1666 - mean_absolute_percentage_error: 2.2195 - val_loss: 0.9876 - val_mae: 0.7825 - val_mean_absolute_percentage_error: 1.5739
+Epoch 93/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1874 - mae: 1.1334 - mean_absolute_percentage_error: 2.0958 - val_loss: 0.7629 - val_mae: 0.6614 - val_mean_absolute_percentage_error: 1.3216
+Epoch 94/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2102 - mae: 1.1564 - mean_absolute_percentage_error: 2.1570 - val_loss: 0.7632 - val_mae: 0.6737 - val_mean_absolute_percentage_error: 1.3406
+Epoch 95/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1863 - mae: 1.1579 - mean_absolute_percentage_error: 2.1168 - val_loss: 0.8895 - val_mae: 0.7296 - val_mean_absolute_percentage_error: 1.4698
+Epoch 96/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.4126 - mae: 1.1911 - mean_absolute_percentage_error: 2.2117 - val_loss: 1.1800 - val_mae: 0.8919 - val_mean_absolute_percentage_error: 1.7582
+Epoch 97/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2663 - mae: 1.1566 - mean_absolute_percentage_error: 2.1660 - val_loss: 0.7725 - val_mae: 0.6780 - val_mean_absolute_percentage_error: 1.3460
+Epoch 98/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.1294 - mae: 1.1215 - mean_absolute_percentage_error: 2.0421 - val_loss: 0.8988 - val_mae: 0.7556 - val_mean_absolute_percentage_error: 1.4956
+Epoch 99/100
+37/37 [==============================] - 0s 10ms/step - loss: 3.2510 - mae: 1.4352 - mean_absolute_percentage_error: 2.6582 - val_loss: 0.8702 - val_mae: 0.7125 - val_mean_absolute_percentage_error: 1.4297
+Epoch 100/100
+37/37 [==============================] - 0s 10ms/step - loss: 2.2468 - mae: 1.1563 - mean_absolute_percentage_error: 2.1410 - val_loss: 0.9331 - val_mae: 0.7673 - val_mean_absolute_percentage_error: 1.5079</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2023-03-27 02:40:42.155629: I tensorflow/core/grappler/optimizers/custom_graph_optimizer_registry.cc:112] Plugin optimizer for device_type GPU is enabled.</code></pre>
+</div>
+</div>
+</section>
+<section id="model-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="model-evaluation">Model Evaluation</h2>
+<div class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>plt.plot(history.history[<span class="st">'mean_absolute_percentage_error'</span>])</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>plt.plot(history.history[<span class="st">'val_mean_absolute_percentage_error'</span>])</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Model MAPE'</span>)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'MAPE'</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">'train'</span>, <span class="st">'test'</span>], loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co">#summarize history for loss</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>plt.plot(history.history[<span class="st">'loss'</span>])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>plt.plot(history.history[<span class="st">'val_loss'</span>])</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Model MSE'</span>)</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'MSE'</span>)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Epoch'</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>plt.legend([<span class="st">'train'</span>, <span class="st">'test'</span>], loc<span class="op">=</span><span class="st">'upper left'</span>)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="model_files/figure-html/cell-4-output-1.png" class="img-fluid"></p>
+</div>
+<div class="cell-output cell-output-display">
+<p><img src="model_files/figure-html/cell-4-output-2.png" class="img-fluid"></p>
+</div>
+</div>
+<div class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> keras.utils.vis_utils <span class="im">import</span> plot_model</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>plot_model(model, to_file<span class="op">=</span><span class="st">'model_plot.png'</span>, show_shapes<span class="op">=</span><span class="va">True</span>, show_layer_names<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<p><img src="model_files/figure-html/cell-5-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="test-set-prediction-plot" class="level2">
+<h2 class="anchored" data-anchor-id="test-set-prediction-plot">Test Set Prediction Plot</h2>
+<div class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df.iloc[<span class="dv">1469</span>:, <span class="dv">0</span>].shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>(630,)</code></pre>
+</div>
+</div>
+<div class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the line plot</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df.iloc[:, <span class="dv">0</span>] <span class="op">=</span> pd.to_datetime(df.iloc[:, <span class="dv">0</span>])</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df.iloc[<span class="dv">1469</span>:, :], x<span class="op">=</span>df.iloc[<span class="dv">1469</span>:, <span class="dv">0</span>], y<span class="op">=</span>x_test[<span class="st">'prediction'</span>].reshape((<span class="dv">630</span>, )), color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Predicted Closing Price'</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df.iloc[<span class="dv">1469</span>:, :], x<span class="op">=</span>df.iloc[<span class="dv">1469</span>:, <span class="dv">0</span>], y<span class="op">=</span>df.iloc[<span class="dv">1469</span>:, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'orange'</span>, label<span class="op">=</span><span class="st">'Original Closing Price'</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the title and axis labels</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Crude Oil Futures: Predicted vs Original (Test Set)'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Price ($)'</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig = go.Figure()</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[1469:, 0], y=x_test['prediction'],</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Predicted Closing Price',</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='blue')))</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[1469:, 0], y=df.iloc[1469:, 1],</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Original Closing Price',</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='orange')))</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.update_layout(title='Crude Oil Futures: Predicted vs Original (Test Set)',</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="co"># xaxis=dict(title='Date'),</span></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># yaxis=dict(title='Price ($)'))</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="model_files/figure-html/cell-7-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="train-set-prediction-plot" class="level2">
+<h2 class="anchored" data-anchor-id="train-set-prediction-plot">Train Set Prediction Plot</h2>
+<div class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig = go.Figure()</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[0:1469, 0], y=x_train['prediction'],</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Predicted Closing Price',</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='blue')))</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[0:1469, 0], y=df.iloc[0:1469, 1],</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Original Closing Price',</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='orange')))</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.update_layout(title='Crude Oil Futures: Predicted vs Original (Train Set)',</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co"># xaxis=dict(title='Date'),</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co"># yaxis=dict(title='Price ($)'))</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.show()</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the figsize</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the line plot</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, :], x<span class="op">=</span>df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, <span class="dv">0</span>], y<span class="op">=</span>x_train[<span class="st">'prediction'</span>].reshape((<span class="dv">1469</span>, )), color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Predicted Closing Price'</span>)</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, :], x<span class="op">=</span>df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, <span class="dv">0</span>], y<span class="op">=</span>df.iloc[<span class="dv">0</span>:<span class="dv">1469</span>, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'orange'</span>, label<span class="op">=</span><span class="st">'Original Closing Price'</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the title and axis labels</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Crude Oil Futures: Predicted vs Original (Train Set)'</span>)</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Price ($)'</span>)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="model_files/figure-html/cell-8-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+<section id="full-dataset-prediction-plot" class="level2">
+<h2 class="anchored" data-anchor-id="full-dataset-prediction-plot">Full Dataset Prediction Plot</h2>
+<div class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>all_preds <span class="op">=</span> np.concatenate([x_train[<span class="st">'prediction'</span>], x_test[<span class="st">'prediction'</span>]], axis<span class="op">=</span><span class="dv">0</span>).reshape((<span class="dv">2099</span>, ))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the figsize</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>plt.subplots(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>), dpi<span class="op">=</span><span class="dv">100</span>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Create the line plot</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span>df.iloc[:, <span class="dv">0</span>], y<span class="op">=</span>all_preds, color<span class="op">=</span><span class="st">'blue'</span>, label<span class="op">=</span><span class="st">'Predicted Closing Price'</span>)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>sns.lineplot(data<span class="op">=</span>df, x<span class="op">=</span>df.iloc[:, <span class="dv">0</span>], y<span class="op">=</span>df.iloc[:, <span class="dv">1</span>], color<span class="op">=</span><span class="st">'orange'</span>, label<span class="op">=</span><span class="st">'Original Closing Price'</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Set the title and axis labels</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Crude Oil Futures: Predicted vs Original (Full Dataset)'</span>)</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Date'</span>)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Price ($)'</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the plot</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig = go.Figure()</span></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[:,0], y=all_preds,</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Predicted Closing Price',</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='blue')))</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.add_trace(go.Scatter(x=df.iloc[:,0], y=df.iloc[:,1],</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co"># mode='lines', name='Original Closing Price',</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co"># line=dict(color='orange')))</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.update_layout(title='Crude Oil Futures: Predicted vs Original (Full Dataset)',</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="co"># xaxis=dict(title='Date'),</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="co"># yaxis=dict(title='Price ($)'))</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plotly_fig.show()</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<p><img src="model_files/figure-html/cell-9-output-1.png" class="img-fluid"></p>
+</div>
+</div>
+</section>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    setTimeout(function() {
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const cites = ref.parentNode.getAttribute('data-cites').split(' ');
+    tippyHover(ref, function() {
+      var popup = window.document.createElement('div');
+      cites.forEach(function(cite) {
+        var citeDiv = window.document.createElement('div');
+        citeDiv.classList.add('hanging-indent');
+        citeDiv.classList.add('csl-entry');
+        var biblioDiv = window.document.getElementById('ref-' + cite);
+        if (biblioDiv) {
+          citeDiv.innerHTML = biblioDiv.innerHTML;
+        }
+        popup.appendChild(citeDiv);
+      });
+      return popup.innerHTML;
+    });
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>
